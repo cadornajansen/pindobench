@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/cadornajansen/pindobench/blob/main/schemas/result.schema.json",
+  "title": "PindoBench Grounding Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "experiment_id",
+    "sample_id",
+    "system",
+    "status",
+    "timing",
+    "prediction",
+    "evaluation"
+  ],
+  "properties": {
+    "experiment_id": { "type": "string", "minLength": 1 },
+    "sample_id": { "type": "string", "minLength": 1 },
+    "run_index": { "type": "integer", "minimum": 1 },
+    "system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "model", "access_mode"],
+      "properties": {
+        "provider": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "access_mode": {
+          "type": "string",
+          "enum": ["hosted_api", "self_hosted", "local_application"]
+        },
+        "architecture": { "type": "string" },
+        "prompt_version": { "type": "string" }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "invalid_output",
+        "timeout",
+        "provider_error",
+        "request_error",
+        "validation_error"
+      ]
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_started_at", "latency_ms"],
+      "properties": {
+        "request_started_at": { "type": "string", "format": "date-time" },
+        "response_received_at": { "type": "string", "format": "date-time" },
+        "latency_ms": { "type": "number", "minimum": 0 },
+        "includes_image_encoding": { "type": "boolean" },
+        "includes_network": { "type": "boolean" },
+        "includes_parsing": { "type": "boolean" }
+      }
+    },
+    "prediction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "point_norm": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "y"],
+          "properties": {
+            "x": { "type": "number", "minimum": 0, "maximum": 1 },
+            "y": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "box_norm": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "y", "width", "height"],
+          "properties": {
+            "x": { "type": "number", "minimum": 0, "maximum": 1 },
+            "y": { "type": "number", "minimum": 0, "maximum": 1 },
+            "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+            "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 }
+          }
+        },
+        "label": { "type": "string" },
+        "raw_response_path": { "type": "string" }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "point_in_box": { "type": "boolean" },
+        "semantic_target_correct": { "type": "boolean" },
+        "coordinate_error_px": { "type": "number", "minimum": 0 },
+        "coordinate_error_normalized": { "type": "number", "minimum": 0 },
+        "failure_category": { "type": "string" },
+        "adjudication_notes": { "type": "string" }
+      }
+    },
+    "cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "estimated_usd": { "type": "number", "minimum": 0 },
+        "pricing_date": { "type": "string", "format": "date" },
+        "assumptions": { "type": "string" }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "os": { "type": "string" },
+        "hardware": { "type": "string" },
+        "repository_commit": { "type": "string" }
+      }
+    }
+  }
+}
