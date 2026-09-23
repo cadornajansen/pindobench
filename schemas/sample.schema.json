@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/cadornajansen/pindobench/blob/main/schemas/sample.schema.json",
+  "title": "PindoBench Sample",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sample_id",
+    "application",
+    "instruction",
+    "screenshot",
+    "target"
+  ],
+  "properties": {
+    "sample_id": {
+      "type": "string",
+      "pattern": "^[A-Z0-9_-]+$"
+    },
+    "application": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "category": { "type": "string" }
+      }
+    },
+    "instruction": {
+      "type": "string",
+      "minLength": 1
+    },
+    "screenshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "width_px", "height_px", "format"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "width_px": { "type": "integer", "minimum": 1 },
+        "height_px": { "type": "integer", "minimum": 1 },
+        "format": {
+          "type": "string",
+          "enum": ["png", "jpeg", "webp"]
+        },
+        "display_scale": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "privacy_reviewed": { "type": "boolean" },
+        "redistributable": { "type": "boolean" }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "bbox_px", "difficulty", "target_type"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "bbox_px": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "y", "width", "height"],
+          "properties": {
+            "x": { "type": "number", "minimum": 0 },
+            "y": { "type": "number", "minimum": 0 },
+            "width": { "type": "number", "exclusiveMinimum": 0 },
+            "height": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["easy", "medium", "hard"]
+        },
+        "target_type": {
+          "type": "string",
+          "enum": [
+            "text_button",
+            "icon_button",
+            "tab",
+            "menu_item",
+            "toolbar_control",
+            "dialog_control",
+            "sidebar_control",
+            "input_field",
+            "toggle_control",
+            "canvas_target",
+            "other"
+          ]
+        },
+        "annotation_notes": { "type": "string" }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "os": { "type": "string" },
+        "screen_width_px": { "type": "integer", "minimum": 1 },
+        "screen_height_px": { "type": "integer", "minimum": 1 },
+        "window_context": { "type": "string" }
+      }
+    }
+  }
+}
