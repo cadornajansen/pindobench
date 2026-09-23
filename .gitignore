@@ -1,0 +1,18 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Local environments and caches
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+node_modules/
+
+# Private screenshots and raw local exports
+benchmark/private/
+experiments/private/
+*.secret.json
